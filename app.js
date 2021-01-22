@@ -15,8 +15,9 @@ const port = process.env['PORT'] || 3000;
  
 app.get('/', function (req, res) {
     greader(readerOptions, (results) => {
-        console.log(results);
-        res.send(results);
+        const data = results.filter(item => item["Wallet Description"] == 'Full market avaialble');
+        const amount = (data[0]["Amount"]).replace(/,/g,'');
+        res.send(amount);
     });
     //res.send('Hello');
 });
