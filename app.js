@@ -1,24 +1,21 @@
 const express = require('express');
-const greader = require("g-sheets-api");
-
-const readerOptions = {
-    sheetId: "1XV4tkoXIjKXzNJlWxDGp7vSeKKC40JpIfeeEodkXps8",
-    returnAllResults: true,
-    // filter: {
-    //   "key to filter on": "value to match",
-    // },
-  };
+const axios = require('axios');
 
 const app = express();
 
 const port = process.env['PORT'] || 3000;
  
 app.get('/', function (req, res) {
-    greader(readerOptions, (results) => {
-        const data = results.filter(item => item["Wallet Description"] == 'Full market avaialble');
-        const amount = (data[0]["Amount"]).replace(/,/g,'');
-        res.send(amount);
-    });
+    axios.get('https://api.coingecko.com/api/v3/coins/yield-app?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false%27')
+    .then(function (response) {
+        // handle success
+        res.send((response.data.market_data.circulating_supply).toString());
+    })
+    .catch(function (error) {
+        // handle error
+        console.log(error);
+        res.send(401);
+  })
     //res.send('Hello');
 });
  
