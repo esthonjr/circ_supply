@@ -9,17 +9,18 @@ const app = express();
 app.use(cors());
 
 const port = process.env['PORT'] || 3000;
- 
+
 app.get('/', function (req, res) {
     // Contract Address- Market cap valuation
-    const cont1 = '0xf94b5c5651c888d928439ab6514b93944eee6f48';
+    const cont1 = process.env['CONT1'];
     // Company reserves not distributed 
-    const cont2 = "0x3cbCaD74225dd6a062008D3ed85Ee0339a7E2B2e";
-    // Company reserves not distributed 
-    const cont3 = "0x6D2FCeb4FEa5d959d3e3865727110122aFC15eA5"; 
+    const cont2 = process.env['CONT2'];
+    // Company reserves not distributed 2
+    const cont3 = process.env['CONT3']; 
     // Team unlocked token not distributed
-    const cont4 = "0x13e3098BbeEE479B64760af8Ef9A968d36361783";
+    const cont4 = process.env['CONT4'];
 
+    // Fetch all values
     axios.all([
         axios.get('https://api.etherscan.io/api', {
             params: {
@@ -73,15 +74,15 @@ app.get('/', function (req, res) {
         result3 = result3.slice(0,result3.length - 18) + "." + result3.slice(result3.length - 18, result3.length);
         result4 = result4.slice(0,result4.length - 18) + "." + result4.slice(result4.length - 18, result4.length);
 
+        // calculating Circulating Supply
         const circSupply = Number(result1) - (Number(result2) + Number(result3) + Number(result4));
         res.send(circSupply.toLocaleString('fullwide', {useGrouping:false}));
     }))
     .catch(function (error) {
-        // handle error
+        // show error on the server and return unauthorized to the client
         console.log(error);
         res.send(401);
     });
-    //res.send('Hello');
 });
  
 app.listen(port);
