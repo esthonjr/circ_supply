@@ -74,7 +74,7 @@ app.get('/', function (req, res) {
         result4 = result4.slice(0,result4.length - 18) + "." + result4.slice(result4.length - 18, result4.length);
 
         const circSupply = Number(result1) - (Number(result2) + Number(result3) + Number(result4));
-        res.send(circSupply.toLocaleString());
+        res.send(circSupply.toLocaleString('fullwide', {useGrouping:false}));
     }))
     .catch(function (error) {
         // handle error
